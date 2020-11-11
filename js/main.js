@@ -157,6 +157,7 @@ function hit(){
   //document.querySelector('#pcards').innerHTML = JSON.stringify(player.hand);
   document.querySelector('#pscore').innerHTML = player.score;
   cardsDrawn += 1;
+  render();
   if (cardsDrawn > 2){
     gamePlay();
   }
@@ -181,6 +182,8 @@ function render(){
  let dcards = document.getElementById('dcards');
  let pcards = document.getElementById('pcards');
  console.log(dealer.hand);
+ dcards.innerHTML = '';
+ pcards.innerHTML = '';
  
  for(let i = 0; i<dealer.hand.length;i++){
    let card = document.createElement('div')
