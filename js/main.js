@@ -2,99 +2,200 @@
 const suits = ['s', 'c', 'd', 'h'];
 const ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
 
-const masterDeck = buildMasterDeck();
-renderDeckInContainer(masterDeck, document.getElementById('master-deck-container'));
+
 
 /*---- app's state (variables)------ */
-let cards;
-let shuffledDeck;
-let playerHand;
-let dealerHand;
-dealerScore = 0;
-playerScore = 0;
+
+let cardsDrawn = 0;
+
+let player = {
+  hand: [],
+  score: 0
+}
+
+let dealer = {
+  hand: [],
+  score: 0
+}
+
 
 
 /*----  cached element references ----- */
 const dealerEl = document.querySelector('#dcards');
 const playerEl = document.querySelector('#pcards');
-const playEl = document.querySelector('#play');h
+
+const playEl = document.querySelector('#play');
 const hitEl = document.querySelector('#hit');
-const playagEl = document.querySelector('#playag');
-const shuffledContainer = document.getElementById('shuffled-deck-container');
+const stayEl = document.querySelector('#stay');
+
+stayEl.disabled = true;
+hitEl.disabled = true;
+
 
 /* ----- event listeners ----- */
 
-playEl.addEventListener('click', );
-hitEl.addEventListener('click', );
-playagEl.addEventListener('click', );
-document.querySelector('button').addEventListener('click', renderShuffledDeck);
+playEl.addEventListener('click', replay);
+hitEl.addEventListener('click', hit);
+stayEl.addEventListener('click', stay)
+
+
 
 /* ----- functions ------ */
-init();
-
-function init(){
 
 
+function restart(){
+  player.hand = [];
+  player.score = 0;
+  dealer.hand = [];
+  dealer.score = 0;
+  deck.create();
+  deck.shuffle();
+  playEl.disabled = false;
+  hitEl.disabled = true;
+  stayEl.disabled = true;
+  
 }
 
 
+let deck  = {
+    deckArray: [],
+    create: function(){
+     let suits = ['s', 'c', 'd', 'h'];
+     let ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
+      for(let s = 0; s<suits.length; s++){
+        for(let r = 0; r<ranks.length; r++){
+          deck.deckArray[s*13 + r] = {
+            suit: suits[s],
+            rank: ranks[r],
+            value: (parseInt(r) ? parseInt(r): 10)
+          };
+        }
+      }
+    },
 
+    shuffle: function(){
+      for(let i=0; i<deck.deckArray.length; i++){
+        let rndm = Math.floor(Math.random()*deck.deckArray.length);
+        let temp = deck.deckArray[rndm];
+        deck.deckArray[rndm] = deck.deckArray[i];
+        deck.deckArray[i] = temp;
+      }
+    }
+};
 
-function renderShuffledDeck() {
-  // Create a copy of the masterDeck (leave masterDeck untouched!)
-  const tempDeck = [...masterDeck];
-  shuffledDeck = [];
-  while (tempDeck.length) {
-    // Get a random index for a card still in the tempDeck
-    const rndIdx = Math.floor(Math.random() * tempDeck.length);
-    // Note the [0] after splice - this is because splice always returns an array and we just want the card object in that array
-    shuffledDeck.push(tempDeck.splice(rndIdx, 1)[0]);
+deck.create();
+deck.shuffle();
+console.log(deck.deckArray)
+
+function cardValue(ace){
+  let cardArray = [],
+  sum = 0,
+  aceVal = 0;
+  cardArray = ace;
+  for(i=0; i<cardArray.length; i++){
+    if(cardArray[i].ranks === 'K' || cardArray[i].ranks === 'Q' || cardArray[i].ranks === 'J'){
+      sum += 10;
+    }else if(cardArray[i].ranks === 'A'){
+      sum += 11;
+      aceVal += 1;
+    }else {
+      sum += cardArray[i].rank;
+    }
   }
-  renderDeckInContainer(shuffledDeck, shuffledContainer);
+  while (aceVal > 0 && sum > 21){
+    sum -= 10;
+    aceVal -= 1;
+  }
+  return sum;
 }
 
-function renderDeckInContainer(deck, container) {
-  container.innerHTML = '';
-  // Let's build the cards as a string of HTML
-  // Use reduce when you want to 'reduce' the array into a single thing - in this case a string of HTML markup 
-  const cardsHtml = deck.reduce(function(html, card) {
-    return html + `<div class="card ${card.face}"></div>`;
-  }, '');
-  container.innerHTML = cardsHtml;
+
+function gamePlay(){
+  if(player.score === 21){
+    document.querySelector('#phrase').innerHTML = 'Blackjack!!! Congratulations Next hand?';
+    restart();
+  }
+  if(dealer.score === 21){
+    document.querySelector('#phrase').innerHTML = "Unlucky!! Dealer won. Play again?"
+    restart();
+  }
+  if(player.score > 21){
+    document.querySelector('#phrase').innerHTML = "Bust!! You lost. Play again?"
+    restart();
+  }
+  if(dealer.score >= 17 && dealer.score < 21 && player.score === dealer.score){
+    document.querySelector('#phrase').innerHTML = 'Push!! You tied with the Dealer. Play again?'
+    restart();
+  }
+  if(dealer.score >= 17 && player.score < 21 && player.score > dealer.score){
+    document.querySelector('#phrase').innerHTML = 'You won!!! Play again?'
+    restart();
+  } 
+  if(dealer.score >=17 && player.score > 21 && player.score){
+    document.querySelector('#phrase').innerHTML = 'Unlucky!! Dealer won. Play again?'
+    restart();
+  }
 }
 
-function buildMasterDeck() {
-  const deck = [];
-  // Use nested forEach to generate card objects
-  suits.forEach(function(suit) {
-    ranks.forEach(function(rank) {
-      deck.push({
-        // The 'face' property maps to the library's CSS classes for cards
-        face: `${suit}${rank}`,
-        // Setting the 'value' property for game of blackjack, not war
-        value: Number(rank) || (rank === 'A' ? 11 : 10)
-      });
-    });
-  });
-  return deck;
+function replay(){
+  playEl.disabled = true;
+  hitEl.disabled = false;
+  stayEl.disabled = false;
+  hit();
+  hit();
+  dealerPull();
+  dealerPull();
+ // gamePlay();
+  render();
 }
 
-renderShuffledDeck();
 
 
-//display two cards for both player and dealer
+function hit(){
+  player.hand.push(deck.deckArray[cardsDrawn]);
+  player.score = cardValue(player.hand);
+  //document.querySelector('#pcards').innerHTML = JSON.stringify(player.hand);
+  document.querySelector('#pscore').innerHTML = player.score;
+  cardsDrawn += 1;
+  if (cardsDrawn > 2){
+    gamePlay();
+  }
+}
 
-function getHand(shuffledDeck){
-  randomHand = Math.floor((Math.random() * shuffledDeck.length));
-    return shuffledDeck[randomHand];
+function dealerPull(){
+  dealer.hand.push(deck.deckArray[cardsDrawn]);
+  dealer.score = cardValue(dealer.hand);
+  //document.querySelector('#dcards').innerHTML = JSON.stringify(dealer.hand);
+  document.querySelector('#dscore').innerHTML = dealer.score;
+  cardsDrawn += 1;
+}
+
+function stay(){
+  while(dealer.score<17){
+    dealerPull();
+  }
+  gamePlay();
+}
+
+function render(){
+ let dcards = document.getElementById('dcards');
+ let pcards = document.getElementById('pcards');
+ console.log(dealer.hand);
+ 
+ for(let i = 0; i<dealer.hand.length;i++){
+   let card = document.createElement('div')
+
+  card.classList.add('card')
+  card.classList.add(`${dealer.hand[i].suit}${dealer.hand[i].rank}`)
+  dcards.append(card)
+ }
+
+ for(let i = 0; i<player.hand.length;i++){
+   let card2 = document.createElement('div')
+  card2.classList.add('card')
+  card2.classList.add(`${player.hand[i].suit}${player.hand[i].rank}`)
+  pcards.append(card2)
+ }
 
 }
 
-function play(){
-  playerCards = [getHand(shuffledDeck), getHand(shuffledDeck)];
-  dealerCards = [gethand(shuffledDeck), getHand(shuffledDeck)];
-}
-
-play();
-console.log(playerCards);
-console.log(dealerCards);

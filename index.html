@@ -4,25 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BlackJack 21</title>
-  <link href="css/cardstarter.css" rel="stylesheet" />
-  <link href="css/main.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/cardstarter.css">
+  <link rel="stylesheet" href="css/main.css">
   <script defer src="js/main.js"></script>
 </head>
 <body>
   <header>BlackJack 21</header>
-  <h1>Good Luck</h1>
+  <h1 id='phrase'>Good Luck</h1>
   <h2>Dealer</h2>
     <section id="dcards"></section>
+    <div id="dscore"></div>
   <h2>Player</h2>
     <section  id="pcards"></section>
+    <div id="pscore"></div>
   <button id="play">Play</button>
   <button id="hit">Hit</button>
-  <button id="playag">Play Again</button>
-  <h3>Master Deck</h3>
-  <section id="master-deck-container" class="card-container"></section>
-  <button>RE-SHUFFLE DECK</button>
-  <h3>Shuffled Deck</h3>
-  <section id="shuffled-deck-container" class="card-container"></section>
-  
+  <button id="stay">Stay</button>
 </body>
 </html>
