@@ -24,6 +24,7 @@ let dealer = {
 const dealerEl = document.querySelector('#dcards');
 const playerEl = document.querySelector('#pcards');
 
+const phraseEl = document.querySelector('#phrase');
 const playEl = document.querySelector('#play');
 const hitEl = document.querySelector('#hit');
 const stayEl = document.querySelector('#stay');
@@ -36,7 +37,7 @@ hitEl.disabled = true;
 
 playEl.addEventListener('click', replay);
 hitEl.addEventListener('click', hit);
-stayEl.addEventListener('click', stay)
+stayEl.addEventListener('click', stay);
 
 
 
@@ -127,15 +128,15 @@ function gamePlay(){
     document.querySelector('#phrase').innerHTML = 'You won!! Play again?'
     restart();
   }
-  if(dealer.score >= 17 && dealer.score < 21 && player.score === dealer.score){
+  if(dealer.score >= 17 && player.score === dealer.score && dealer.score < 21){
     document.querySelector('#phrase').innerHTML = 'Push!! You tied with the Dealer. Play again?'
     restart();
   }
-  if(dealer.score >= 17 && player.score <= 21 && player.score > dealer.score){
+  if(dealer.score >= 17 && player.score > dealer.score && player.score < 21){
     document.querySelector('#phrase').innerHTML = 'You won!!! Play again?'
     restart();
   } 
-  if(dealer.score >=17 && player.score <= 21 && player.score < dealer.score){
+  if(dealer.score >= 17 && player.score < dealer.score && dealer.score < 21){
     document.querySelector('#phrase').innerHTML = 'Unlucky!! Dealer won. Play again?'
     restart();
   }
@@ -149,7 +150,8 @@ function replay(){
   hit();
   dealerPull();
   dealerPull();
- // gamePlay();
+  phraseEl.innerHTML = 'Good Luck';
+  // gamePlay();
   render();
 }
 
@@ -176,7 +178,7 @@ function dealerPull(){
 }
 
 function stay(){
-  while(dealer.score<17){
+  while(dealer.score < 17){
     dealerPull();
   }
   gamePlay();
