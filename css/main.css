@@ -8,6 +8,7 @@ svg {
 
 html, body {
   height: 100%;
+  background-color: grey;
   
 }
 
@@ -24,13 +25,13 @@ button {
   margin: 10px auto;
   padding: 10px;
   font-size: 16px;
-  color: grey;
-  border: 1px solid grey;
+  color: black;
+  border: 1px solid red;
   border-radius: 4px;
   outline: none;
 }
 
 button:hover {
-  background-color: grey;
-  color: white;
+  background-color: green;
+  color: cyan;
 }
