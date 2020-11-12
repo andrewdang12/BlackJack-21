@@ -123,15 +123,19 @@ function gamePlay(){
     document.querySelector('#phrase').innerHTML = "Bust!! You lost. Play again?"
     restart();
   }
+  if(dealer.score > 21){
+    document.querySelector('#phrase').innerHTML = 'You won!! Play again?'
+    restart();
+  }
   if(dealer.score >= 17 && dealer.score < 21 && player.score === dealer.score){
     document.querySelector('#phrase').innerHTML = 'Push!! You tied with the Dealer. Play again?'
     restart();
   }
-  if(dealer.score >= 17 && player.score < 21 && player.score > dealer.score){
+  if(dealer.score >= 17 && player.score <= 21 && player.score > dealer.score){
     document.querySelector('#phrase').innerHTML = 'You won!!! Play again?'
     restart();
   } 
-  if(dealer.score >=17 && player.score > 21 && player.score){
+  if(dealer.score >=17 && player.score <= 21 && player.score < dealer.score){
     document.querySelector('#phrase').innerHTML = 'Unlucky!! Dealer won. Play again?'
     restart();
   }
