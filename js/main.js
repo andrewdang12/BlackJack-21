@@ -68,7 +68,7 @@ let deck  = {
           deck.deckArray[s*13 + r] = {
             suit: suits[s],
             rank: ranks[r],
-            value: (parseInt(r) ? parseInt(r): 10)
+            value: (parseInt(r) ? parseInt(r): 10) + 2
           };
         }
       }
@@ -89,29 +89,31 @@ deck.shuffle();
 console.log(deck.deckArray)
 
 function cardValue(ace){
-  let cardArray = [],
-  sum = 0,
-  aceVal = 0;
+  let cardArray = []
+  let sum = 0
+  aceVal = 0
   cardArray = ace;
+  
   for(i=0; i<cardArray.length; i++){
     if(cardArray[i].ranks === 'K' || cardArray[i].ranks === 'Q' || cardArray[i].ranks === 'J'){
-      sum += 10;
+      sum += 10
     }else if(cardArray[i].ranks === 'A'){
-      sum += 11;
-      aceVal += 1;
+      sum += 11
+      aceVal += 1
     }else {
-      sum += cardArray[i].rank;
+      sum += cardArray[i].value
     }
   }
   while (aceVal > 0 && sum > 21){
-    sum -= 10;
-    aceVal -= 1;
+    sum -= 10
+    aceVal -= 1
   }
-  return sum;
+  return sum
 }
 
 
 function gamePlay(){
+  render();
   if(player.score === 21){
     document.querySelector('#phrase').innerHTML = 'Blackjack!!! Congratulations Next hand?';
     restart();
@@ -188,6 +190,7 @@ function render(){
  let dcards = document.getElementById('dcards');
  let pcards = document.getElementById('pcards');
  console.log(dealer.hand);
+ console.log(player.hand);
  dcards.innerHTML = '';
  pcards.innerHTML = '';
  
