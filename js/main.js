@@ -65,11 +65,11 @@ let deck  = {
      let ranks = ['02', '03', '04', '05', '06', '07', '08', '09', '10', 'J', 'Q', 'K', 'A'];
       for(let s = 0; s<suits.length; s++){
         for(let r = 0; r<ranks.length; r++){
-          deck.deckArray[s*13 + r] = {
+          deck.deckArray.push({
             suit: suits[s],
             rank: ranks[r],
-            value: (parseInt(r) ? parseInt(r): 10) + 2
-          };
+            value: parseInt(ranks[r]) ? parseInt(ranks[r]) : ranks[r] === 'A' ? 11 : 10 
+          })
         }
       }
     },
@@ -105,7 +105,7 @@ function cardValue(ace){
     }
   }
   while (aceVal > 0 && sum > 21){
-    sum -= 10
+    sum -= 11
     aceVal -= 1
   }
   return sum
